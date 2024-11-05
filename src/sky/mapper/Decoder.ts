@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { ClassConstructor } from "class-transformer";
-import { Meta } from "./Meta";
-import { FieldParam } from "./Field";
-import { FieldNumberParam } from "./FieldNumber";
-import { FieldListParam } from "./FieldList";
+import { Meta } from "../decorator/Meta";
+import { FieldParam } from "../decorator/Field";
+import { FieldNumberParam } from "../decorator/FieldNumber";
+import { FieldListParam } from "../decorator/FieldList";
 
 export function convertStringToObject<T>(
   input: string,

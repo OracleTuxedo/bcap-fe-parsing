@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { FieldParam } from "./Field";
-import { Meta } from "./Meta";
-import { FieldNumberParam } from "./FieldNumber";
+import { FieldParam } from "../decorator/Field";
+import { Meta } from "../decorator/Meta";
+import { FieldNumberParam } from "../decorator/FieldNumber";
 // import { FieldNumberParam } from "./FieldNumber";
 // import { FieldListParam } from "./FieldList";
 
