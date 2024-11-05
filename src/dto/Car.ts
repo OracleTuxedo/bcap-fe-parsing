@@ -1,6 +1,6 @@
-import { Field } from "../telegram/Field";
-import { FieldList } from "../telegram/FieldList";
-import { FieldNumber } from "../telegram/FieldNumber";
+import { Field } from "../sky/Field";
+import { FieldList } from "../sky/FieldList";
+import { FieldNumber } from "../sky/FieldNumber";
 
 export class Tire {
   @Field({ type: "STRING", length: 10, trim: "RTRIM" })

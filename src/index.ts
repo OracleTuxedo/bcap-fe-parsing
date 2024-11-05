@@ -3,9 +3,9 @@
 import { Logger } from "sitka";
 // import { parseStringToObject } from "./Parse";
 // import { Dog } from "./Dto";
-import { convertStringToObject } from "./telegram/Decoder";
+import { convertStringToObject } from "./sky/Decoder";
 import { Car, Tire } from "./dto/Car";
-import { convertObjectToString } from "./telegram/Encoder";
+import { convertObjectToString } from "./sky/Encoder";
 
 export class Example {
   /* Private Instance Fields */
