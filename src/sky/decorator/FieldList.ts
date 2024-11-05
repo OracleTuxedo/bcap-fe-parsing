@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { FieldListMeta, Meta } from "./Meta";
 
 export interface FieldListParam<T> {

@@ -55,6 +55,8 @@ export function convertObjectToString(obj: Object): string | null {
         const param: {
           objArray: Array<Object>;
         } = { objArray: obj[propertyKey] };
+
+        // Pass by reference
         resultString += parseFieldList(param);
         break;
       default:

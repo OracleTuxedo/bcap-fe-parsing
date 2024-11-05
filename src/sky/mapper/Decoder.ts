@@ -1,14 +1,22 @@
 import "reflect-metadata";
 import { ClassConstructor } from "class-transformer";
-import { Meta } from "../decorator/Meta";
-import { FieldParam } from "../decorator/Field";
-import { FieldNumberParam } from "../decorator/FieldNumber";
-import { FieldListParam } from "../decorator/FieldList";
+import {
+  Meta,
+  FieldParam,
+  FieldNumberParam,
+  FieldListParam,
+  FieldVoParam,
+  // FieldVoParam,
+} from "../decorator";
 
-export function convertStringToObject<T>(
-  input: string,
-  targetClass: ClassConstructor<T>
-): T | null {
+export interface DecoderParam {
+  index: number;
+  input: string;
+  targetClass: ClassConstructor<Object>;
+}
+
+export function convertStringToObject<T>(param: DecoderParam): T | null {
+  const { input, targetClass } = param;
   const obj = new targetClass() as Object;
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
@@ -23,7 +31,10 @@ export function convertStringToObject<T>(
   const fieldLists: Array<FieldListParam<Object>> | undefined =
     Reflect.getMetadata(Meta.FIELD_LIST, obj);
 
-  let index: number = 0;
+  const fieldVos: Array<FieldVoParam<Object>> | undefined = Reflect.getMetadata(
+    Meta.FIELD_VO,
+    obj
+  );
 
   let tempSubset: string = "";
 
@@ -38,16 +49,16 @@ export function convertStringToObject<T>(
 
     switch (type) {
       case "STRING":
-        tempSubset = input.substring(index, index + length);
+        tempSubset = input.substring(param.index, param.index + length);
 
         if (trim === "LTRIM") return null;
         tempSubset = tempSubset.trimEnd();
 
         obj[propertyKey] = tempSubset;
-        index += length;
+        param.index += length;
         break;
       case "NUMBER":
-        tempSubset = input.substring(index, index + length);
+        tempSubset = input.substring(param.index, param.index + length);
 
         if (trim === "RTRIM") return null;
         tempSubset = tempSubset.trimStart();
@@ -60,7 +71,7 @@ export function convertStringToObject<T>(
 
         if (fieldNumber === undefined) return null;
         obj[propertyKey] = parseFieldNumber(tempSubset, fieldNumber);
-        index += length;
+        param.index += length;
         break;
       case "LIST":
         const fieldList: FieldListParam<Object> | undefined = fieldLists?.find(
@@ -69,16 +80,43 @@ export function convertStringToObject<T>(
           }
         );
         if (fieldList === undefined) return null;
-        const param: {
+
+        /// Pass by reference
+        const paramList: ParseFieldListParam = {
+          obj,
+          input,
+          index: param.index,
+          fieldList,
+        };
+
+        if (parseFieldList(paramList) === false) return null;
+
+        /// No need, because that object changed by reference within parseFieldList function
+        // obj[propertyKey] = paramList.obj[propertyKey];
+        // param.index = paramList.index;
+        break;
+      case "VO":
+        const fieldVo: FieldVoParam<Object> | undefined = fieldVos?.find(
+          (fieldVo) => {
+            return fieldVo.propertyKey === propertyKey;
+          }
+        );
+        if (fieldVo === undefined) return null;
+
+        /// Pass by reference
+        const paramVo: {
           obj: Object;
           input: string;
           index: number;
-          fieldList: FieldListParam<Object>;
-        } = { obj, input, index, fieldList };
+          fieldVo: FieldVoParam<Object>;
+        } = { obj, input, index: param.index, fieldVo };
 
-        if (parseFieldList(param) === false) return null;
-        obj[propertyKey] = param.obj[propertyKey];
-        index = param.index;
+        if (parseFieldVo(paramVo) === false) return null;
+
+        /// No need, because that object changed by reference within parseFieldVo function
+        // obj[propertyKey] = paramVo.obj[propertyKey];
+        // param.index = paramVo.index;
+        break;
       default:
         break;
     }
@@ -118,13 +156,15 @@ function parseFieldNumber(
   }
 }
 
-function parseFieldList(param: {
+interface ParseFieldListParam {
   obj: Object;
   input: string;
   index: number;
   fieldList: FieldListParam<Object>;
-}): boolean {
-  const { propertyKey, metadata } = param.fieldList;
+}
+
+function parseFieldList(paramList: ParseFieldListParam): boolean {
+  const { propertyKey, metadata } = paramList.fieldList;
   const { typeClass } = metadata;
   const classInstance = new typeClass();
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
@@ -136,25 +176,54 @@ function parseFieldList(param: {
   for (const field of fields) {
     lengthInput += field.metadata.length;
   }
-  param.obj[propertyKey] = [];
+  paramList.obj[propertyKey] = [];
 
   // Get count of list, usually 8 char before List at DevonC
-  const tempSubset: string = param.input.substring(
-    param.index,
-    param.index + 8
+  const tempSubset: string = paramList.input.substring(
+    paramList.index,
+    paramList.index + 8
   );
-  param.index += 8;
+  paramList.index += 8;
   const count: number = Number(tempSubset);
+  if (isNaN(count)) return false;
 
   for (let i = 0; i < count; i++) {
-    const childInput = param.input.substring(
-      param.index,
-      param.index + lengthInput
+    const childInput = paramList.input.substring(
+      paramList.index,
+      paramList.index + lengthInput
     );
-    const parsedInput = convertStringToObject(childInput, typeClass);
+    const param: DecoderParam = {
+      index: paramList.index,
+      input: childInput,
+      targetClass: typeClass,
+    };
+    const parsedInput = convertStringToObject(param);
     if (parsedInput === null) return false;
-    param.obj[propertyKey].push(parsedInput);
-    param.index += lengthInput;
+    paramList.obj[propertyKey].push(parsedInput);
+    paramList.index += lengthInput;
   }
+  return true;
+}
+
+interface ParseFieldVoParam {
+  obj: Object;
+  input: string;
+  index: number;
+  fieldVo: FieldVoParam<Object>;
+}
+
+function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
+  const { propertyKey, metadata } = paramVo.fieldVo;
+  const { typeClass } = metadata;
+
+  const param: DecoderParam = {
+    index: paramVo.index,
+    input: paramVo.input,
+    targetClass: typeClass,
+  };
+
+  paramVo.obj[propertyKey] = convertStringToObject<Object>(param);
+  paramVo.index = param.index;
+
   return true;
 }

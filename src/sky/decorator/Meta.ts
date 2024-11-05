@@ -4,12 +4,13 @@ export enum Meta {
   FIELD = "field",
   FIELD_NUMBER = "fieldnumber",
   FIELD_LIST = "fieldlist",
+  FIELD_VO = "fieldvo",
 }
 
 export interface FieldMeta {
-  type: "STRING" | "CHAR" | "BYTES" | "NUMBER" | "LIST";
+  type: "STRING" | "CHAR" | "BYTES" | "NUMBER" | "LIST" | "VO";
   length: number;
-  trim: "LTRIM" | "RTRIM";
+  trim: "LTRIM" | "RTRIM" | "NONE";
 }
 
 export interface FieldNumberMeta {
@@ -20,5 +21,9 @@ export interface FieldNumberMeta {
 }
 
 export interface FieldListMeta<T> {
+  typeClass: ClassConstructor<T>;
+}
+
+export interface FieldVoMeta<T> {
   typeClass: ClassConstructor<T>;
 }
