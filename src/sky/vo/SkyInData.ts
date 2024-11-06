@@ -3,6 +3,7 @@ import { Field, FieldNumber, FieldVo } from "../decorator";
 
 export class SkyInData<I> {
   constructor(typeClass: ClassConstructor<I>) {
+    this.data = new typeClass();
     // Pass the typeClass to the FieldVo decorator
     FieldVo({ typeClass })(this, "data");
   }

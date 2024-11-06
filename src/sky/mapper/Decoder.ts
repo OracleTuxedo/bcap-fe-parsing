@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ClassConstructor } from "class-transformer";
+// import { ClassConstructor } from "class-transformer";
 import {
   Meta,
   FieldParam,
@@ -9,15 +9,15 @@ import {
   // FieldVoParam,
 } from "../decorator";
 
-export interface DecoderParam {
+export interface DecoderParam<T> {
   index: number;
   input: string;
-  targetClass: ClassConstructor<Object>;
+  classInstance: Object | T;
 }
 
-export function convertStringToObject<T>(param: DecoderParam): T | null {
-  const { input, targetClass } = param;
-  const obj = new targetClass() as Object;
+export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
+  const { input, classInstance } = param;
+  const obj = classInstance as Object;
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
     obj
@@ -92,8 +92,8 @@ export function convertStringToObject<T>(param: DecoderParam): T | null {
         if (parseFieldList(paramList) === false) return null;
 
         /// No need, because that object changed by reference within parseFieldList function
-        // obj[propertyKey] = paramList.obj[propertyKey];
-        // param.index = paramList.index;
+        obj[propertyKey] = paramList.obj[propertyKey];
+        param.index = paramList.index;
         break;
       case "VO":
         const fieldVo: FieldVoParam<Object> | undefined = fieldVos?.find(
@@ -104,18 +104,18 @@ export function convertStringToObject<T>(param: DecoderParam): T | null {
         if (fieldVo === undefined) return null;
 
         /// Pass by reference
-        const paramVo: {
-          obj: Object;
-          input: string;
-          index: number;
-          fieldVo: FieldVoParam<Object>;
-        } = { obj, input, index: param.index, fieldVo };
+        const paramVo: ParseFieldVoParam = {
+          obj,
+          input,
+          index: param.index,
+          fieldVo,
+        };
 
         if (parseFieldVo(paramVo) === false) return null;
 
         /// No need, because that object changed by reference within parseFieldVo function
-        // obj[propertyKey] = paramVo.obj[propertyKey];
-        // param.index = paramVo.index;
+        obj[propertyKey] = paramVo.obj[propertyKey];
+        param.index = paramVo.index;
         break;
       default:
         break;
@@ -181,21 +181,22 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   // Get count of list, usually 8 char before List at DevonC
   const tempSubset: string = paramList.input.substring(
     paramList.index,
-    paramList.index + 8
+    paramList.index + 1
   );
-  paramList.index += 8;
+  paramList.index += 1;
   const count: number = Number(tempSubset);
   if (isNaN(count)) return false;
+  console.log(`parseFieldList count ${count}`);
 
   for (let i = 0; i < count; i++) {
     const childInput = paramList.input.substring(
       paramList.index,
       paramList.index + lengthInput
     );
-    const param: DecoderParam = {
+    const param: DecoderParam<Object> = {
       index: paramList.index,
       input: childInput,
-      targetClass: typeClass,
+      classInstance: new typeClass(),
     };
     const parsedInput = convertStringToObject(param);
     if (parsedInput === null) return false;
@@ -216,10 +217,10 @@ function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
   const { propertyKey, metadata } = paramVo.fieldVo;
   const { typeClass } = metadata;
 
-  const param: DecoderParam = {
+  const param: DecoderParam<Object> = {
     index: paramVo.index,
     input: paramVo.input,
-    targetClass: typeClass,
+    classInstance: new typeClass(),
   };
 
   paramVo.obj[propertyKey] = convertStringToObject<Object>(param);
