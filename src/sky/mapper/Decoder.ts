@@ -8,7 +8,6 @@ import {
   FieldVoParam,
   // FieldVoParam,
 } from "../decorator";
-
 export interface DecoderParam<T> {
   index: number;
   input: string;
@@ -170,8 +169,9 @@ interface ParseFieldListParam {
 
 function parseFieldList(paramList: ParseFieldListParam): boolean {
   const { propertyKey, metadata } = paramList.fieldList;
-  const { typeClass } = metadata;
-  const classInstance = new typeClass();
+  const { classInstance } = metadata;
+  console.log(classInstance); // [Function Tire] atau Tire{}
+
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
     classInstance
@@ -193,18 +193,25 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   if (isNaN(count)) return false;
 
   for (let i = 0; i < count; i++) {
+    /// Perform Deep Copy
+    const copyClassInstance = JSON.parse(
+      JSON.stringify(classInstance)
+    ) as typeof classInstance;
+    console.log(copyClassInstance);
+
     const childInput = paramList.input.substring(
       paramList.index,
       paramList.index + lengthInput
     );
+    console.log(childInput);
     const param: DecoderParam<Object> = {
       index: 0,
       input: childInput,
-      classInstance: new typeClass(),
+      classInstance: copyClassInstance,
     };
     const parsedInput = convertStringToObject(param);
     if (parsedInput === null) return false;
-    paramList.obj[propertyKey].push(parsedInput);
+    paramList.obj[propertyKey].push(parsedInput as typeof classInstance);
     paramList.index += lengthInput;
   }
   return true;
@@ -219,18 +226,14 @@ interface ParseFieldVoParam {
 
 function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
   const { propertyKey, metadata } = paramVo.fieldVo;
-  const { typeClass } = metadata;
-  //
-  //
-  //
-  //
-  //
+  const { classInstance } = metadata;
+
   const param: DecoderParam<Object> = {
     index: paramVo.index,
     input: paramVo.input,
     /// TODO constructor dari parameter tersebut membutuhkan parameter dari SED03F107RInVo
     /// How to solve this ?
-    classInstance: new typeClass(),
+    classInstance: classInstance,
   };
 
   paramVo.obj[propertyKey] = convertStringToObject<Object>(param);

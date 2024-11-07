@@ -11,7 +11,7 @@ export class SkyIn<I> {
     const skyInDataInstance = this.data.constructor;
 
     console.log(skyInDataInstance);
-    FieldVo({ typeClass: SkyInData })(this, "data");
+    FieldVo({ classInstance: SkyInData })(this, "data");
 
     // const skyInDataInstance = this.data.constructor as ClassConstructor<I>;
     // console.log("SkyIn");
@@ -19,7 +19,7 @@ export class SkyIn<I> {
     // FieldVo({ typeClass: skyInDataInstance })(this, "data");
   }
   @Field({ type: "VO", length: 0, trim: "NONE" })
-  @FieldVo({ typeClass: SkyHeader })
+  @FieldVo({ classInstance: SkyHeader })
   header: SkyHeader;
 
   @Field({ type: "VO", length: 0, trim: "NONE" })

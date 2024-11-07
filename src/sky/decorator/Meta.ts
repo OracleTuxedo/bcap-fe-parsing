@@ -1,4 +1,4 @@
-import { ClassConstructor } from "class-transformer";
+// import { ClassConstructor } from "class-transformer";
 
 export enum Meta {
   FIELD = "field",
@@ -21,9 +21,9 @@ export interface FieldNumberMeta {
 }
 
 export interface FieldListMeta<T> {
-  typeClass: ClassConstructor<T>;
+  classInstance: T;
 }
 
 export interface FieldVoMeta<T> {
-  typeClass: ClassConstructor<T>;
+  classInstance: T;
 }

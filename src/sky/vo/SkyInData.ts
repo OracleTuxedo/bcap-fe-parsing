@@ -7,7 +7,7 @@ export class SkyInData<I> {
     console.log(typeClass);
     this.data = new typeClass();
     // Pass the typeClass to the FieldVo decorator
-    FieldVo({ typeClass })(this, "data");
+    FieldVo({ classInstance: typeClass })(this, "data");
   }
 
   @Field({ type: "STRING", length: 1, trim: "RTRIM" })
@@ -21,6 +21,6 @@ export class SkyInData<I> {
   reserved: string;
 
   @Field({ type: "VO", length: 0, trim: "NONE" })
-  @FieldVo({ typeClass: Object })
+  @FieldVo({ classInstance: Object }) // TODO
   data: I;
 }
