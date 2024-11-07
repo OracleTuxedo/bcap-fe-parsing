@@ -18,8 +18,7 @@ export interface DecoderParam<T> {
 export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
   const obj = classInstance as Object;
-  console.log("convertStringToObject obj");
-  console.log(obj);
+
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
     obj
@@ -72,8 +71,10 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
         );
 
         if (fieldNumber === undefined) return null;
+
         obj[propertyKey] = parseFieldNumber(tempSubset, fieldNumber);
         param.index += length;
+
         break;
       case "LIST":
         const fieldList: FieldListParam<Object> | undefined = fieldLists?.find(
@@ -94,8 +95,9 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
         if (parseFieldList(paramList) === false) return null;
 
         /// No need, because that object changed by reference within parseFieldList function
-        obj[propertyKey] = paramList.obj[propertyKey];
-        param.index = paramList.index;
+        // obj[propertyKey] = paramList.obj[propertyKey];
+        // param.index = paramList.index;
+
         break;
       case "VO":
         const fieldVo: FieldVoParam<Object> | undefined = fieldVos?.find(
@@ -116,8 +118,9 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
         if (parseFieldVo(paramVo) === false) return null;
 
         /// No need, because that object changed by reference within parseFieldVo function
-        obj[propertyKey] = paramVo.obj[propertyKey];
-        param.index = paramVo.index;
+        // obj[propertyKey] = paramVo.obj[propertyKey];
+        // param.index = paramVo.index;
+
         break;
       default:
         break;
@@ -188,7 +191,6 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   paramList.index += 8;
   const count: number = Number(tempSubset);
   if (isNaN(count)) return false;
-  console.log(`parseFieldList count ${count}`);
 
   for (let i = 0; i < count; i++) {
     const childInput = paramList.input.substring(
@@ -196,7 +198,7 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
       paramList.index + lengthInput
     );
     const param: DecoderParam<Object> = {
-      index: paramList.index,
+      index: 0,
       input: childInput,
       classInstance: new typeClass(),
     };
@@ -218,11 +220,11 @@ interface ParseFieldVoParam {
 function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
   const { propertyKey, metadata } = paramVo.fieldVo;
   const { typeClass } = metadata;
-  console.log("START parseFieldVo");
-  console.log(paramVo);
-  console.log(paramVo.fieldVo);
-  console.log(paramVo.fieldVo.metadata);
-  console.log("END parseFieldVo");
+  //
+  //
+  //
+  //
+  //
   const param: DecoderParam<Object> = {
     index: paramVo.index,
     input: paramVo.input,

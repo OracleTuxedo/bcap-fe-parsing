@@ -21,6 +21,6 @@ export class SkyInData<I> {
   reserved: string;
 
   @Field({ type: "VO", length: 0, trim: "NONE" })
-  @FieldVo({ typeClass: I })
+  @FieldVo({ typeClass: Object })
   data: I;
 }
