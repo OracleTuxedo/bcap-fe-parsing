@@ -18,6 +18,8 @@ export interface DecoderParam<T> {
 export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
   const obj = classInstance as Object;
+  console.log("convertStringToObject obj");
+  console.log(obj);
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
     obj
@@ -181,9 +183,9 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   // Get count of list, usually 8 char before List at DevonC
   const tempSubset: string = paramList.input.substring(
     paramList.index,
-    paramList.index + 1
+    paramList.index + 8
   );
-  paramList.index += 1;
+  paramList.index += 8;
   const count: number = Number(tempSubset);
   if (isNaN(count)) return false;
   console.log(`parseFieldList count ${count}`);
@@ -216,10 +218,16 @@ interface ParseFieldVoParam {
 function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
   const { propertyKey, metadata } = paramVo.fieldVo;
   const { typeClass } = metadata;
-
+  console.log("START parseFieldVo");
+  console.log(paramVo);
+  console.log(paramVo.fieldVo);
+  console.log(paramVo.fieldVo.metadata);
+  console.log("END parseFieldVo");
   const param: DecoderParam<Object> = {
     index: paramVo.index,
     input: paramVo.input,
+    /// TODO constructor dari parameter tersebut membutuhkan parameter dari SED03F107RInVo
+    /// How to solve this ?
     classInstance: new typeClass(),
   };
 

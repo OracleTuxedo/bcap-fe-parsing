@@ -43,7 +43,7 @@ export function prototype() {
   const carParsed: Car | null = convertStringToObject({
     index: 0,
     input: input,
-    targetClass: Car,
+    classInstance: new Car(),
   });
   // const parsed = parseStringToObject(input, Dog);
 

@@ -1,8 +1,8 @@
 "use strict";
 
-// import { prototype } from "./prototype";
+import { prototype } from "./prototype";
 
-// prototype();
+prototype();
 
 import { SkyIn } from "./sky/vo";
 import { convertStringToObject } from "./sky/mapper/Decoder";
