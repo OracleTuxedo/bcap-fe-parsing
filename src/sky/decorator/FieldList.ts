@@ -15,6 +15,7 @@ export function FieldList<T>(metadata: FieldListMeta<T>) {
       Meta.FIELD_LIST,
       target
     );
+    metadata.count = metadata.count ?? 8;
     lists.push({ propertyKey, metadata });
     Reflect.defineMetadata(Meta.FIELD_LIST, lists, target);
   };

@@ -33,8 +33,8 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
     param.fieldNumbers ?? Reflect.getMetadata(Meta.FIELD_NUMBER, obj);
   // console.log(fieldNumbers);
 
-  // const fieldLists: Array<FieldListParam<Object>> | undefined =
-  //   param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
+  const fieldLists: Array<FieldListParam<Object>> | undefined =
+    param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
   // console.log(fieldLists);
 
   // const fieldVos: Array<FieldVoParam<Object>> | undefined =
@@ -84,19 +84,20 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
 
         break;
       case "LIST":
-        // const fieldList: FieldListParam<Object> | undefined = fieldLists?.find(
-        //   (fieldList) => {
-        //     return fieldList.propertyKey === propertyKey;
-        //   }
-        // );
-        // if (fieldList === undefined) return null;
+        const fieldList: FieldListParam<Object> | undefined = fieldLists?.find(
+          (fieldList) => {
+            return fieldList.propertyKey === propertyKey;
+          }
+        );
+
+        if (fieldList === undefined) return null;
 
         /// Pass by reference
         const paramList: ParseFieldListParam = {
           obj: obj[propertyKey],
           input,
           index,
-          // fieldList,
+          fieldList,
         };
 
         console.log("Le List before index " + index);
@@ -188,7 +189,7 @@ interface ParseFieldListParam {
   obj: Array<Object>;
   input: string;
   index: number;
-  // fieldList: FieldListParam<Object>;
+  fieldList: FieldListParam<Object>;
 }
 
 function parseFieldList(paramList: ParseFieldListParam): boolean {
@@ -234,9 +235,9 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   // Get count of list, usually 8 char before List at DevonC
   const tempSubset: string = paramList.input.substring(
     paramList.index,
-    paramList.index + 8
+    paramList.index + (paramList.fieldList.metadata.count ?? 8)
   );
-  paramList.index += 8;
+  paramList.index += paramList.fieldList.metadata.count ?? 8;
   const count: number = Number(tempSubset);
   if (isNaN(count)) return false;
 

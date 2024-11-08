@@ -22,6 +22,7 @@ export interface FieldNumberMeta {
 
 export interface FieldListMeta<T> {
   classInstance: T;
+  count?: number;
 }
 
 export interface FieldVoMeta<T> {
