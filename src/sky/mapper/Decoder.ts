@@ -33,12 +33,12 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
     param.fieldNumbers ?? Reflect.getMetadata(Meta.FIELD_NUMBER, obj);
   // console.log(fieldNumbers);
 
-  const fieldLists: Array<FieldListParam<Object>> | undefined =
-    param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
+  // const fieldLists: Array<FieldListParam<Object>> | undefined =
+  //   param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
   // console.log(fieldLists);
 
-  const fieldVos: Array<FieldVoParam<Object>> | undefined =
-    param.fieldVos ?? Reflect.getMetadata(Meta.FIELD_VO, obj);
+  // const fieldVos: Array<FieldVoParam<Object>> | undefined =
+  //   param.fieldVos ?? Reflect.getMetadata(Meta.FIELD_VO, obj);
   // console.log(fieldVos);
 
   let tempSubset: string = "";
@@ -84,19 +84,19 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
 
         break;
       case "LIST":
-        const fieldList: FieldListParam<Object> | undefined = fieldLists?.find(
-          (fieldList) => {
-            return fieldList.propertyKey === propertyKey;
-          }
-        );
-        if (fieldList === undefined) return null;
+        // const fieldList: FieldListParam<Object> | undefined = fieldLists?.find(
+        //   (fieldList) => {
+        //     return fieldList.propertyKey === propertyKey;
+        //   }
+        // );
+        // if (fieldList === undefined) return null;
 
         /// Pass by reference
         const paramList: ParseFieldListParam = {
           obj: obj[propertyKey],
           input,
           index,
-          fieldList,
+          // fieldList,
         };
 
         console.log("Le List before index " + index);
@@ -113,23 +113,23 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
 
         break;
       case "VO":
-        const fieldVo: FieldVoParam<Object> | undefined = fieldVos?.find(
-          (fieldVo) => {
-            return fieldVo.propertyKey === propertyKey;
-          }
-        );
-        if (fieldVo === undefined) return null;
+        // const fieldVo: FieldVoParam<Object> | undefined = fieldVos?.find(
+        //   (fieldVo) => {
+        //     return fieldVo.propertyKey === propertyKey;
+        //   }
+        // );
+        // if (fieldVo === undefined) return null;
 
         console.log("Le Vo obj[propertyKey]");
         console.log(obj[propertyKey]);
-        console.log(fieldVo);
+        // console.log(fieldVo);
 
         /// Pass by reference
         const paramVo: ParseFieldVoParam = {
           obj: obj[propertyKey],
           input,
           index,
-          fieldVo,
+          // fieldVo,
         };
 
         console.log("Le Vo before index " + index);
@@ -188,7 +188,7 @@ interface ParseFieldListParam {
   obj: Array<Object>;
   input: string;
   index: number;
-  fieldList: FieldListParam<Object>;
+  // fieldList: FieldListParam<Object>;
 }
 
 function parseFieldList(paramList: ParseFieldListParam): boolean {
@@ -280,16 +280,16 @@ interface ParseFieldVoParam {
   obj: Object;
   input: string;
   index: number;
-  fieldVo: FieldVoParam<Object>;
+  // fieldVo: FieldVoParam<Object>;
 }
 
 function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
-  const { metadata } = paramVo.fieldVo;
-  const { classInstance } = metadata;
+  // const { metadata } = paramVo.fieldVo;
+  // const { classInstance } = metadata;
 
   console.log("parseFieldVo");
   console.log(paramVo.obj);
-  console.log(classInstance);
+  // console.log(classInstance);
 
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
