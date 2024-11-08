@@ -18,11 +18,14 @@ export class Tire {
 }
 
 export class Car {
+  constructor() {
+    this.tires = [new Tire()];
+  }
   @Field({ type: "STRING", length: 10, trim: "RTRIM" })
   name: string;
 
   @Field({ type: "LIST", length: 0, trim: "LTRIM" })
-  @FieldList({ classInstance: new Tire() })
+  @FieldList({ classInstance: Tire })
   tires: Array<Tire>;
 
   @Field({ type: "STRING", length: 20, trim: "RTRIM" })

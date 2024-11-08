@@ -93,7 +93,7 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
 
         /// Pass by reference
         const paramList: ParseFieldListParam = {
-          obj,
+          obj: obj[propertyKey],
           input,
           index,
           fieldList,
@@ -108,6 +108,7 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
 
         /// No need, because that object changed by reference within parseFieldList function
         // obj[propertyKey] = paramList.obj[propertyKey];
+        obj[propertyKey] = paramList.obj;
         param.index = paramList.index;
 
         break;
@@ -184,44 +185,42 @@ function parseFieldNumber(
 }
 
 interface ParseFieldListParam {
-  obj: Object;
+  obj: Array<Object>;
   input: string;
   index: number;
   fieldList: FieldListParam<Object>;
 }
 
 function parseFieldList(paramList: ParseFieldListParam): boolean {
-  // const getParam = (input, instance) => {
-  //   return {
-  //     index: 0,
-  //     input: input,
-  //     classInstance: instance,
-  //   };
-  // };
+  // const { propertyKey } = paramList.fieldList;
+  // const { classInstance } = metadata;
+  console.log("parseFieldList");
+  // console.log(classInstance); // [Function Tire] atau Tire{}
+  console.log(paramList.obj);
 
-  const { propertyKey, metadata } = paramList.fieldList;
-  const { classInstance } = metadata;
-  console.log(classInstance); // [Function Tire] atau Tire{}
+  if (paramList.obj.length === 0) return false;
+
+  const thatObject = paramList.obj[0];
 
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
-    classInstance
+    thatObject
   );
-  // console.log(fields);
+  console.log(fields);
 
   const fieldNumbers: Array<FieldNumberParam> | undefined = Reflect.getMetadata(
     Meta.FIELD_NUMBER,
-    classInstance
+    thatObject
   );
   // console.log(fieldNumbers);
 
   const fieldLists: Array<FieldListParam<Object>> | undefined =
-    Reflect.getMetadata(Meta.FIELD_LIST, classInstance);
+    Reflect.getMetadata(Meta.FIELD_LIST, thatObject);
   // console.log(fieldLists);
 
   const fieldVos: Array<FieldVoParam<Object>> | undefined = Reflect.getMetadata(
     Meta.FIELD_VO,
-    classInstance
+    thatObject
   );
   // console.log(fieldVos);
 
@@ -230,7 +229,7 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   for (const field of fields) {
     lengthInput += field.metadata.length;
   }
-  paramList.obj[propertyKey] = [];
+  paramList.obj = [] as Array<typeof thatObject>;
 
   // Get count of list, usually 8 char before List at DevonC
   const tempSubset: string = paramList.input.substring(
@@ -244,7 +243,7 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   for (let i = 0; i < count; i++) {
     /// Perform Deep Copy
 
-    const copyClassInstance = structuredClone(classInstance);
+    const copyClassInstance = structuredClone(thatObject);
     // const copyClassInstance = JSON.parse(
     //   JSON.stringify(classInstance)
     // ) as typeof classInstance;
@@ -266,12 +265,14 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
       fieldVos,
     };
     // const param: DecoderParam<Object> = getParam(childInput, classInstance);
-    const parsedInput = convertStringToObject<typeof classInstance>(param);
+    const parsedInput = convertStringToObject<typeof thatObject>(param);
     if (parsedInput === null) return false;
-    paramList.obj[propertyKey].push(parsedInput as typeof classInstance);
+    paramList.obj.push(parsedInput as typeof thatObject);
     paramList.index += lengthInput;
     console.log("paramList.index " + paramList.index);
   }
+  console.log("parseFieldList paramList.obj");
+  console.log(paramList.obj);
   return true;
 }
 
