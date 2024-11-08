@@ -6,11 +6,11 @@ import { SkyInData } from "./SkyInData";
 export class SkyIn<I> {
   constructor(typeClass: ClassConstructor<I>) {
     this.data = new SkyInData(typeClass);
-    console.log("SkyIn");
-    console.log(typeClass);
-    const skyInDataInstance = this.data.constructor;
-
-    console.log(skyInDataInstance);
+    this.header = new SkyHeader();
+    // const skyInDataInstance = this.data.constructor;
+    // console.log("SkyIn");
+    // console.log(typeClass);
+    // console.log(skyInDataInstance);
     FieldVo({ classInstance: SkyInData })(this, "data");
 
     // const skyInDataInstance = this.data.constructor as ClassConstructor<I>;

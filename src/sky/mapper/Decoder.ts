@@ -8,6 +8,7 @@ import {
   FieldVoParam,
   // FieldVoParam,
 } from "../decorator";
+
 export interface DecoderParam<T> {
   index: number;
   input: string;
@@ -22,11 +23,11 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
   const obj = classInstance as Object;
   // console.log(" LE RUCCO convertStringToObject");
-  // console.log(obj);
+  console.log(obj);
 
   const fields: Array<FieldParam> | undefined =
     param.fields ?? Reflect.getMetadata(Meta.FIELD, obj);
-  // console.log(fields);
+  console.log(fields);
 
   const fieldNumbers: Array<FieldNumberParam> | undefined =
     param.fieldNumbers ?? Reflect.getMetadata(Meta.FIELD_NUMBER, obj);
@@ -98,9 +99,12 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
           fieldList,
         };
 
+        console.log("Le List before index " + index);
+
         if (parseFieldList(paramList) === false) return null;
 
-        console.log("Le param.index " + param.index);
+        console.log("Le List param.index " + param.index);
+        console.log("Le List after index " + index);
 
         /// No need, because that object changed by reference within parseFieldList function
         // obj[propertyKey] = paramList.obj[propertyKey];
@@ -115,19 +119,29 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
         );
         if (fieldVo === undefined) return null;
 
+        console.log("Le Vo obj[propertyKey]");
+        console.log(obj[propertyKey]);
+        console.log(fieldVo);
+
         /// Pass by reference
         const paramVo: ParseFieldVoParam = {
-          obj,
+          obj: obj[propertyKey],
           input,
-          index: param.index,
+          index,
           fieldVo,
         };
 
+        console.log("Le Vo before index " + index);
+
         if (parseFieldVo(paramVo) === false) return null;
+
+        console.log("Le Vo param.index " + param.index);
+        console.log("Le Vo after index " + index);
 
         /// No need, because that object changed by reference within parseFieldVo function
         // obj[propertyKey] = paramVo.obj[propertyKey];
-        // param.index = paramVo.index;
+        obj[propertyKey] = paramVo.obj;
+        param.index = paramVo.index;
 
         break;
       default:
@@ -230,11 +244,10 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
   for (let i = 0; i < count; i++) {
     /// Perform Deep Copy
 
+    const copyClassInstance = structuredClone(classInstance);
     // const copyClassInstance = JSON.parse(
     //   JSON.stringify(classInstance)
     // ) as typeof classInstance;
-
-    const copyClassInstance = structuredClone(classInstance);
 
     console.log(copyClassInstance);
 
@@ -270,18 +283,48 @@ interface ParseFieldVoParam {
 }
 
 function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
-  const { propertyKey, metadata } = paramVo.fieldVo;
+  const { metadata } = paramVo.fieldVo;
   const { classInstance } = metadata;
+
+  console.log("parseFieldVo");
+  console.log(paramVo.obj);
+  console.log(classInstance);
+
+  const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
+    Meta.FIELD,
+    paramVo.obj
+  );
+  console.log(fields);
+
+  const fieldNumbers: Array<FieldNumberParam> | undefined = Reflect.getMetadata(
+    Meta.FIELD_NUMBER,
+    paramVo.obj
+  );
+  console.log(fieldNumbers);
+
+  const fieldLists: Array<FieldListParam<Object>> | undefined =
+    Reflect.getMetadata(Meta.FIELD_LIST, paramVo.obj);
+  console.log(fieldLists);
+
+  const fieldVos: Array<FieldVoParam<Object>> | undefined = Reflect.getMetadata(
+    Meta.FIELD_VO,
+    paramVo.obj
+  );
+  console.log(fieldVos);
 
   const param: DecoderParam<Object> = {
     index: paramVo.index,
     input: paramVo.input,
     /// TODO constructor dari parameter tersebut membutuhkan parameter dari SED03F107RInVo
     /// How to solve this ?
-    classInstance: classInstance,
+    classInstance: paramVo.obj,
+    fields,
+    fieldNumbers,
+    fieldLists,
+    fieldVos,
   };
 
-  paramVo.obj[propertyKey] = convertStringToObject<Object>(param);
+  paramVo.obj = convertStringToObject<Object>(param) ?? {};
   paramVo.index = param.index;
 
   return true;

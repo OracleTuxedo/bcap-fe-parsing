@@ -3,8 +3,8 @@ import { Field, FieldNumber, FieldVo } from "../decorator";
 
 export class SkyInData<I> {
   constructor(typeClass: ClassConstructor<I>) {
-    console.log("SkyInData");
-    console.log(typeClass);
+    // console.log("SkyInData");
+    // console.log(typeClass);
     this.data = new typeClass();
     // Pass the typeClass to the FieldVo decorator
     FieldVo({ classInstance: typeClass })(this, "data");
@@ -21,6 +21,6 @@ export class SkyInData<I> {
   reserved: string;
 
   @Field({ type: "VO", length: 0, trim: "NONE" })
-  @FieldVo({ classInstance: Object }) // TODO
+  @FieldVo({ classInstance: Object })
   data: I;
 }
