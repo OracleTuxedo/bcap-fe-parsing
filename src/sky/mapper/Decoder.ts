@@ -18,6 +18,7 @@ export interface DecoderParam<T> {
 
 export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
+
   const obj = classInstance as Object;
 
   const fields: Array<FieldParam> | undefined =
@@ -76,8 +77,6 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
             return fieldList.propertyKey === propertyKey;
           }
         );
-
-        if (fieldList === undefined) return null;
 
         /// Pass by reference
         const paramList: ParseFieldListParam = {
@@ -151,46 +150,50 @@ interface ParseFieldListParam {
   obj: Array<Object>;
   input: string;
   index: number;
-  fieldList: FieldListParam<Object>;
+  fieldList: FieldListParam<Object> | undefined;
 }
 
 function parseFieldList(paramList: ParseFieldListParam): boolean {
-  if (paramList.obj.length === 0) return false;
+  if (paramList.obj.length === 0 && !paramList.obj[0]) return false;
 
-  const thatObject = paramList.obj[0];
+  const childObject = paramList.obj[0];
 
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
-    thatObject
+    childObject
   );
 
   const fieldNumbers: Array<FieldNumberParam> | undefined = Reflect.getMetadata(
     Meta.FIELD_NUMBER,
-    thatObject
+    childObject
   );
 
   const fieldLists: Array<FieldListParam<Object>> | undefined =
-    Reflect.getMetadata(Meta.FIELD_LIST, thatObject);
+    Reflect.getMetadata(Meta.FIELD_LIST, childObject);
 
   if (fields === undefined) return false;
+
   let lengthInput = 0;
   for (const field of fields) {
     lengthInput += field.metadata.length;
   }
-  paramList.obj = [] as Array<typeof thatObject>;
 
-  // Get count of list, usually 8 char before List at DevonC
+  paramList.obj = [] as Array<typeof childObject>;
+
+  const lengthList: number = paramList.fieldList?.metadata.length ?? 8;
+
   const tempSubset: string = paramList.input.substring(
     paramList.index,
-    paramList.index + (paramList.fieldList.metadata.count ?? 8)
+    paramList.index + lengthList
   );
-  paramList.index += paramList.fieldList.metadata.count ?? 8;
+  paramList.index += lengthList;
+
   const count: number = Number(tempSubset);
   if (isNaN(count)) return false;
 
   for (let i = 0; i < count; i++) {
     /// Perform Deep Copy
-    const copyClassInstance = structuredClone(thatObject);
+    const copyClassInstance = structuredClone(childObject);
 
     const childInput = paramList.input.substring(
       paramList.index,
@@ -206,9 +209,9 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
       fieldLists,
     };
 
-    const parsedInput = convertStringToObject<typeof thatObject>(param);
+    const parsedInput = convertStringToObject<typeof childObject>(param);
     if (parsedInput === null) return false;
-    paramList.obj.push(parsedInput as typeof thatObject);
+    paramList.obj.push(parsedInput as typeof childObject);
     paramList.index += lengthInput;
   }
 

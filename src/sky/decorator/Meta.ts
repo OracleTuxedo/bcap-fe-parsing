@@ -21,10 +21,6 @@ export interface FieldNumberMeta {
 }
 
 export interface FieldListMeta<T> {
-  classInstance: T;
-  count?: number;
-}
-
-export interface FieldVoMeta<T> {
-  classInstance: T;
+  // classInstance: T; /// No longer needed, since created instance responsbility on its parent
+  length: number;
 }

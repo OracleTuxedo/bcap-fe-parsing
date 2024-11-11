@@ -34,6 +34,6 @@ export class SkyMessage {
   error_info: string;
 
   @Field({ type: "LIST", length: 0, trim: "NONE" })
-  @FieldList({ classInstance: SkyMessageSub, count: 2 })
+  @FieldList({ length: 2 })
   list: Array<SkyMessageSub>;
 }
