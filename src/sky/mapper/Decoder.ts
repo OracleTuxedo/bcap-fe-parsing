@@ -5,7 +5,6 @@ import {
   FieldParam,
   FieldNumberParam,
   FieldListParam,
-  FieldVoParam,
   // FieldVoParam,
 } from "../decorator";
 
@@ -16,30 +15,23 @@ export interface DecoderParam<T> {
   fields?: Array<FieldParam> | undefined;
   fieldNumbers?: Array<FieldNumberParam> | undefined;
   fieldLists?: Array<FieldListParam<Object>> | undefined;
-  fieldVos?: Array<FieldVoParam<Object>> | undefined;
 }
 
 export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
   const obj = classInstance as Object;
-  // console.log(" LE RUCCO convertStringToObject");
-  console.log(obj);
 
   const fields: Array<FieldParam> | undefined =
     param.fields ?? Reflect.getMetadata(Meta.FIELD, obj);
-  console.log(fields);
 
   const fieldNumbers: Array<FieldNumberParam> | undefined =
     param.fieldNumbers ?? Reflect.getMetadata(Meta.FIELD_NUMBER, obj);
-  // console.log(fieldNumbers);
 
   const fieldLists: Array<FieldListParam<Object>> | undefined =
     param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
-  // console.log(fieldLists);
 
   // const fieldVos: Array<FieldVoParam<Object>> | undefined =
   //   param.fieldVos ?? Reflect.getMetadata(Meta.FIELD_VO, obj);
-  // console.log(fieldVos);
 
   let tempSubset: string = "";
   let index: number = 0;
@@ -50,7 +42,6 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
     const field = fields[i];
     const { propertyKey } = field;
     const { type, length, trim } = field.metadata;
-    console.log("param.index " + param.index);
 
     tempSubset = "";
     index = param.index;
@@ -100,12 +91,7 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
           fieldList,
         };
 
-        console.log("Le List before index " + index);
-
         if (parseFieldList(paramList) === false) return null;
-
-        console.log("Le List param.index " + param.index);
-        console.log("Le List after index " + index);
 
         /// No need, because that object changed by reference within parseFieldList function
         // obj[propertyKey] = paramList.obj[propertyKey];
@@ -121,10 +107,6 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
         // );
         // if (fieldVo === undefined) return null;
 
-        console.log("Le Vo obj[propertyKey]");
-        console.log(obj[propertyKey]);
-        // console.log(fieldVo);
-
         /// Pass by reference
         const paramVo: ParseFieldVoParam = {
           obj: obj[propertyKey],
@@ -133,12 +115,7 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
           // fieldVo,
         };
 
-        console.log("Le Vo before index " + index);
-
         if (parseFieldVo(paramVo) === false) return null;
-
-        console.log("Le Vo param.index " + param.index);
-        console.log("Le Vo after index " + index);
 
         /// No need, because that object changed by reference within parseFieldVo function
         // obj[propertyKey] = paramVo.obj[propertyKey];
@@ -195,9 +172,6 @@ interface ParseFieldListParam {
 function parseFieldList(paramList: ParseFieldListParam): boolean {
   // const { propertyKey } = paramList.fieldList;
   // const { classInstance } = metadata;
-  console.log("parseFieldList");
-  // console.log(classInstance); // [Function Tire] atau Tire{}
-  console.log(paramList.obj);
 
   if (paramList.obj.length === 0) return false;
 
@@ -207,23 +181,14 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
     Meta.FIELD,
     thatObject
   );
-  console.log(fields);
 
   const fieldNumbers: Array<FieldNumberParam> | undefined = Reflect.getMetadata(
     Meta.FIELD_NUMBER,
     thatObject
   );
-  // console.log(fieldNumbers);
 
   const fieldLists: Array<FieldListParam<Object>> | undefined =
     Reflect.getMetadata(Meta.FIELD_LIST, thatObject);
-  // console.log(fieldLists);
-
-  const fieldVos: Array<FieldVoParam<Object>> | undefined = Reflect.getMetadata(
-    Meta.FIELD_VO,
-    thatObject
-  );
-  // console.log(fieldVos);
 
   if (fields === undefined) return false;
   let lengthInput = 0;
@@ -249,13 +214,11 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
     //   JSON.stringify(classInstance)
     // ) as typeof classInstance;
 
-    console.log(copyClassInstance);
-
     const childInput = paramList.input.substring(
       paramList.index,
       paramList.index + lengthInput
     );
-    console.log(childInput);
+
     const param: DecoderParam<Object> = {
       index: 0,
       input: childInput,
@@ -263,17 +226,14 @@ function parseFieldList(paramList: ParseFieldListParam): boolean {
       fields,
       fieldNumbers,
       fieldLists,
-      fieldVos,
     };
     // const param: DecoderParam<Object> = getParam(childInput, classInstance);
     const parsedInput = convertStringToObject<typeof thatObject>(param);
     if (parsedInput === null) return false;
     paramList.obj.push(parsedInput as typeof thatObject);
     paramList.index += lengthInput;
-    console.log("paramList.index " + paramList.index);
   }
-  console.log("parseFieldList paramList.obj");
-  console.log(paramList.obj);
+
   return true;
 }
 
@@ -288,31 +248,18 @@ function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
   // const { metadata } = paramVo.fieldVo;
   // const { classInstance } = metadata;
 
-  console.log("parseFieldVo");
-  console.log(paramVo.obj);
-  // console.log(classInstance);
-
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
     paramVo.obj
   );
-  console.log(fields);
 
   const fieldNumbers: Array<FieldNumberParam> | undefined = Reflect.getMetadata(
     Meta.FIELD_NUMBER,
     paramVo.obj
   );
-  console.log(fieldNumbers);
 
   const fieldLists: Array<FieldListParam<Object>> | undefined =
     Reflect.getMetadata(Meta.FIELD_LIST, paramVo.obj);
-  console.log(fieldLists);
-
-  const fieldVos: Array<FieldVoParam<Object>> | undefined = Reflect.getMetadata(
-    Meta.FIELD_VO,
-    paramVo.obj
-  );
-  console.log(fieldVos);
 
   const param: DecoderParam<Object> = {
     index: paramVo.index,
@@ -323,7 +270,6 @@ function parseFieldVo(paramVo: ParseFieldVoParam): boolean {
     fields,
     fieldNumbers,
     fieldLists,
-    fieldVos,
   };
 
   paramVo.obj = convertStringToObject<Object>(param) ?? {};
