@@ -8,8 +8,9 @@
 import { convertStringToObject } from "./sky/mapper/Decoder";
 // import { SED03F107RInVo } from "./dto/SED03F107RInVo";
 import { SkyOut } from "./sky/vo/SkyOut";
-import { SED03F107ROutVo } from "./dto/SED03F107ROutVo";
-import { SAC02F452ROutVo } from "./dto/SAC02F452R/SAC02F452ROutVo";
+
+import { SAC02F452ROutVo } from "./dto/SAC02F452R/";
+import { SED03F107ROutVo } from "./dto/SED03F107R";
 
 // const input =
 //   "00000580DEVWAS0120240918130914054mti2100SED03F107R              MTI S                        DEVWAS0120240918130914054mti210020240918130914000520WEB       172.16.20.11                                WED030120H N1787130271     020240918130914000520                    A000000      00010                                                                        ID                                                                                                                                             D00000077                     EDC  0013000011976476                                   @@";

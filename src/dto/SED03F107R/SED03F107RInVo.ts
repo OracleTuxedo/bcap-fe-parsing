@@ -1,4 +1,4 @@
-import { Field } from "../sky/decorator";
+import { Field } from "../../sky/decorator";
 
 export class SED03F107RInVo {
   @Field({ type: "STRING", length: 5, trim: "RTRIM" })
