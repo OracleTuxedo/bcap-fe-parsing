@@ -5,5 +5,3 @@ export * from "./Field";
 export * from "./FieldNumber";
 
 export * from "./FieldList";
-
-export * from "./FieldVo";
