@@ -25,7 +25,7 @@ export class Car {
   name: string;
 
   @Field({ type: "LIST", length: 0, trim: "LTRIM" })
-  @FieldList({ classInstance: Tire })
+  @FieldList({ length: 8 })
   tires: Array<Tire>;
 
   @Field({ type: "STRING", length: 20, trim: "RTRIM" })

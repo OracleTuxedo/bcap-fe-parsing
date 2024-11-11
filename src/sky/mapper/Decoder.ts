@@ -28,7 +28,7 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
     param.fields ?? Reflect.getMetadata(Meta.FIELD, obj);
   const fieldNumbers: Array<FieldNumberParam> | undefined =
     param.fieldNumbers ?? Reflect.getMetadata(Meta.FIELD_NUMBER, obj);
-  const fieldLists: Array<FieldListParam<Object>> | undefined =
+  const fieldLists: Array<FieldListParam<typeof obj>> | undefined =
     param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
 
   /// Temporary string that preserves only after substring of index length
