@@ -1,10 +1,6 @@
 import { SAC02F452RInVo } from "./dto/SAC02F452R";
-import {
-  convertObjectToString,
-  getPacketSize,
-  makeSkyHeader,
-  makeSkyInData,
-} from "./sky/mapper/Encoder";
+import { convertObjectToString } from "./sky/mapper/Encoder";
+import { makeSkyHeader, makeSkyInData, getPacketSize } from "./sky/util";
 import { SkyHeader, SkyIn, SkyInData, SkyUserDataInput } from "./sky/vo";
 
 export function encodePrototype() {
@@ -14,8 +10,6 @@ export function encodePrototype() {
   inVo.mid = "71000204442";
   inVo.auth_strt_date = "20240101";
   inVo.auth_end_date = "20240919";
-
-  // console.log(inVo);
 
   const userDataInput: SkyUserDataInput = new SkyUserDataInput();
   userDataInput.tx_code = "SAC02F452R";
@@ -29,8 +23,6 @@ export function encodePrototype() {
   userDataInput.lang_type = "EN";
 
   const skyHeader: SkyHeader | null = makeSkyHeader(userDataInput);
-  // console.log(skyHeader);
-  // console.log(skyHeader?.msg_len);
 
   const skyInData: SkyInData<SAC02F452RInVo> | null = makeSkyInData(
     SAC02F452RInVo,
