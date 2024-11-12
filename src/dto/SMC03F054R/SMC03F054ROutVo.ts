@@ -24,6 +24,6 @@ export class SMC03F054ROutVo {
   @FieldNumber({ type: "LONG", decimal: 0 })
   page_size: number;
 
-  @Field({ type: "VO", length: 0, trim: "NONE" })
+  @Field({ type: "LIST", length: 0, trim: "NONE" })
   sub1_vo: Array<SMC03F054ROutSub1Vo>;
 }
