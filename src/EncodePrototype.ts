@@ -1,6 +1,6 @@
 import { SAC02F452RInVo } from "./dto/SAC02F452R";
 import { convertObjectToString } from "./sky/mapper/Encoder";
-import { makeSkyIn } from "./sky/util";
+import { makeSkyIn, makeSkyUserDataInput } from "./sky/util";
 import { SkyIn, SkyUserDataInput } from "./sky/vo";
 
 export function encodePrototype() {
@@ -11,22 +11,16 @@ export function encodePrototype() {
   inVo.auth_strt_date = "20240101";
   inVo.auth_end_date = "20240919";
 
-  const userDataInput: SkyUserDataInput = new SkyUserDataInput();
-  userDataInput.tx_code = "SAC02F452R";
-  userDataInput.scrn_id = "WED030120H";
-  userDataInput.client_ip_no = "172.16.20.11";
-  userDataInput.op_id = "1787130271";
-  userDataInput.sync_type = "A";
-  userDataInput.rspn_svc_code = "";
-  userDataInput.async_rspn_yn = "0";
-  userDataInput.ttl_use_flag = 0;
-  userDataInput.lang_type = "EN";
+  const userDataInput: SkyUserDataInput = makeSkyUserDataInput({
+    tuxedoCode: "SAC02F452R",
+    screenId: "WMC0302500",
+  });
 
-  const skyIn: SkyIn<SAC02F452RInVo> | null = makeSkyIn<SAC02F452RInVo>(
-    SAC02F452RInVo,
-    inVo,
-    userDataInput
-  );
+  const skyIn: SkyIn<SAC02F452RInVo> | null = makeSkyIn<SAC02F452RInVo>({
+    typeClass: SAC02F452RInVo,
+    inVo: inVo,
+    userDataInput: userDataInput,
+  });
 
   if (!skyIn) return null;
 

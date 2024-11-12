@@ -9,13 +9,42 @@ import {
 } from "./SkyUtil";
 import moment from "moment";
 
-export function makeSkyIn<I>(
-  typeClass: ClassConstructor<I>,
-  inVo: I,
-  userDataInput: SkyUserDataInput
-): SkyIn<I> | null {
-  const skyHeader: SkyHeader | null = makeSkyHeader(userDataInput);
-  const skyInData: SkyInData<I> | null = makeSkyInData(typeClass, inVo);
+export function makeSkyUserDataInput({
+  tuxedoCode,
+  screenId,
+}: {
+  tuxedoCode: string;
+  screenId: string;
+}): SkyUserDataInput {
+  const userDataInput: SkyUserDataInput = new SkyUserDataInput();
+  userDataInput.tx_code = tuxedoCode;
+  userDataInput.scrn_id = screenId;
+  userDataInput.client_ip_no = "172.16.20.11"; /// TODO get client IP browser / server
+  userDataInput.op_id = "1787130271"; /// TODO User ID from Local Storage  (authentication)
+  userDataInput.sync_type = "A";
+  userDataInput.rspn_svc_code = "";
+  userDataInput.async_rspn_yn = "0";
+  userDataInput.ttl_use_flag = 0;
+  userDataInput.lang_type = "EN"; /// TODO Locale EN / ID
+  return userDataInput;
+}
+
+export function makeSkyIn<I>({
+  typeClass,
+  inVo,
+  userDataInput,
+}: {
+  typeClass: ClassConstructor<I>;
+  inVo: I;
+  userDataInput: SkyUserDataInput;
+}): SkyIn<I> | null {
+  const skyHeader: SkyHeader | null = makeSkyHeader({
+    userDataInput: userDataInput,
+  });
+  const skyInData: SkyInData<I> | null = makeSkyInData({
+    typeClass: typeClass,
+    data: inVo,
+  });
 
   if (!skyHeader || !skyInData) return null;
 
@@ -32,10 +61,13 @@ export function makeSkyIn<I>(
   return skyIn;
 }
 
-function makeSkyInData<I>(
-  typeClass: ClassConstructor<I>,
-  data: I
-): SkyInData<I> | null {
+function makeSkyInData<I>({
+  typeClass,
+  data,
+}: {
+  typeClass: ClassConstructor<I>;
+  data: I;
+}): SkyInData<I> | null {
   const skyInData: SkyInData<I> = new SkyInData<I>(typeClass);
   skyInData.data_type = "D";
   skyInData.data = data;
@@ -46,7 +78,11 @@ function makeSkyInData<I>(
   return skyInData;
 }
 
-function makeSkyHeader(userDataInput: SkyUserDataInput): SkyHeader | null {
+function makeSkyHeader({
+  userDataInput,
+}: {
+  userDataInput: SkyUserDataInput;
+}): SkyHeader | null {
   const header: SkyHeader = new SkyHeader();
 
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
