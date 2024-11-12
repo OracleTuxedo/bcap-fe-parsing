@@ -1,5 +1,5 @@
 import { ClassConstructor } from "class-transformer";
-import { SkyHeader, SkyInData, SkyUserDataInput } from "../vo";
+import { SkyHeader, SkyIn, SkyInData, SkyUserDataInput } from "../vo";
 import { FieldParam, Meta } from "../decorator";
 import {
   globalSeq,
@@ -9,7 +9,30 @@ import {
 } from "./SkyUtil";
 import moment from "moment";
 
-export function makeSkyInData<I>(
+export function makeSkyIn<I>(
+  typeClass: ClassConstructor<I>,
+  inVo: I,
+  userDataInput: SkyUserDataInput
+): SkyIn<I> | null {
+  const skyHeader: SkyHeader | null = makeSkyHeader(userDataInput);
+  const skyInData: SkyInData<I> | null = makeSkyInData(typeClass, inVo);
+
+  if (!skyHeader || !skyInData) return null;
+
+  const skyIn: SkyIn<I> = new SkyIn(typeClass);
+  skyIn.header = skyHeader;
+  skyIn.data = skyInData;
+
+  const countSkyIn = getPacketSize(skyIn);
+
+  if (!countSkyIn) return null;
+
+  skyIn.header.msg_len = countSkyIn - 8;
+
+  return skyIn;
+}
+
+function makeSkyInData<I>(
   typeClass: ClassConstructor<I>,
   data: I
 ): SkyInData<I> | null {
@@ -23,9 +46,7 @@ export function makeSkyInData<I>(
   return skyInData;
 }
 
-export function makeSkyHeader(
-  userDataInput: SkyUserDataInput
-): SkyHeader | null {
+function makeSkyHeader(userDataInput: SkyUserDataInput): SkyHeader | null {
   const header: SkyHeader = new SkyHeader();
 
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(

@@ -1,7 +1,7 @@
 import { SAC02F452RInVo } from "./dto/SAC02F452R";
 import { convertObjectToString } from "./sky/mapper/Encoder";
-import { makeSkyHeader, makeSkyInData, getPacketSize } from "./sky/util";
-import { SkyHeader, SkyIn, SkyInData, SkyUserDataInput } from "./sky/vo";
+import { makeSkyIn } from "./sky/util";
+import { SkyIn, SkyUserDataInput } from "./sky/vo";
 
 export function encodePrototype() {
   const inVo: SAC02F452RInVo = new SAC02F452RInVo();
@@ -22,26 +22,13 @@ export function encodePrototype() {
   userDataInput.ttl_use_flag = 0;
   userDataInput.lang_type = "EN";
 
-  const skyHeader: SkyHeader | null = makeSkyHeader(userDataInput);
-
-  const skyInData: SkyInData<SAC02F452RInVo> | null = makeSkyInData(
+  const skyIn: SkyIn<SAC02F452RInVo> | null = makeSkyIn<SAC02F452RInVo>(
     SAC02F452RInVo,
-    inVo
+    inVo,
+    userDataInput
   );
 
-  if (!skyHeader || !skyInData) return null;
-
-  const skyIn: SkyIn<SAC02F452RInVo> = new SkyIn(SAC02F452RInVo);
-  skyIn.header = skyHeader;
-  skyIn.data = skyInData;
-
-  const countSkyIn = getPacketSize(skyIn);
-
-  if (!countSkyIn) return null;
-
-  skyIn.header.msg_len = countSkyIn - 8;
-  console.log(skyIn);
-  console.log("TIDAK NULL");
+  if (!skyIn) return null;
 
   const resultString = convertObjectToString(skyIn);
 
