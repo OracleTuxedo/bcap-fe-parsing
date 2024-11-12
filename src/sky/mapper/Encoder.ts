@@ -104,7 +104,7 @@ export function makeSkyHeader(
   );
   if (!fields) return null;
 
-  header.gid_sysname = "MAAS"; // TODO InetAddress.getLocalHost().getHostName();
+  header.gid_sysname = "BCAP"; // TODO InetAddress.getLocalHost().getHostName();
   header.gid_yyyyymmdd = moment().format("YYYYMMDD");
   header.gid_hhmmss = moment().format("HHmmss");
   header.gid_seq = globalSeq();
@@ -184,6 +184,8 @@ export function convertObjectToString(obj: Object): string | null {
     Meta.FIELD_NUMBER,
     obj
   );
+  const fieldLists: Array<FieldListParam<typeof obj>> | undefined =
+    Reflect.getMetadata(Meta.FIELD_LIST, obj);
 
   if (!fields) return null;
 
@@ -196,8 +198,11 @@ export function convertObjectToString(obj: Object): string | null {
 
     switch (type) {
       case "STRING":
-        resultString += (obj[propertyKey] as string).padEnd(length, " ");
+        if (!obj[propertyKey]) resultString += "".padEnd(length, " ");
+        else resultString += (obj[propertyKey] as string).padEnd(length, " ");
+        // resultString += (obj[propertyKey] as string).padEnd(length, " ");
         break;
+
       case "NUMBER":
         const fieldNumber: FieldNumberParam | undefined = fieldNumbers?.find(
           (fieldNumber) => {
@@ -213,14 +218,22 @@ export function convertObjectToString(obj: Object): string | null {
           fieldNumber
         );
         break;
-      case "LIST":
-        const param: {
-          objArray: Array<Object>;
-        } = { objArray: obj[propertyKey] };
 
-        // Pass by reference
-        resultString += parseFieldList(param);
+      case "LIST":
+        const fieldList: FieldListParam<typeof obj> | undefined =
+          fieldLists?.find((fieldList) => {
+            return fieldList.propertyKey === propertyKey;
+          });
+
+        resultString += parseFieldList(obj[propertyKey], fieldList);
         break;
+
+      case "VO":
+        const tempResultString = convertObjectToString(obj[propertyKey]);
+        if (!tempResultString) return null;
+        resultString += tempResultString;
+        break;
+
       default:
         break;
     }
@@ -253,14 +266,17 @@ function parseFieldNumber(
   }
 }
 
-function parseFieldList(param: { objArray: Array<Object> }): string | null {
-  if (!param.objArray) return null;
+function parseFieldList(
+  obj: Array<Object>,
+  fieldList: FieldListParam<Object> | undefined
+): string | null {
+  if (!obj) return null;
   let resultString = "";
+  const length = fieldList?.metadata.length ?? 8;
+  resultString += obj.length.toString().padStart(length, "0");
 
-  resultString += param.objArray.length.toString().padStart(8, "0");
-
-  for (let i = 0; i < param.objArray.length; i++) {
-    resultString += convertObjectToString(param.objArray[i]);
+  for (let i = 0; i < obj.length; i++) {
+    resultString += convertObjectToString(obj[i]);
   }
   return resultString;
 }

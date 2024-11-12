@@ -1,5 +1,6 @@
 import { SAC02F452RInVo } from "./dto/SAC02F452R";
 import {
+  convertObjectToString,
   getPacketSize,
   makeSkyHeader,
   makeSkyInData,
@@ -50,5 +51,13 @@ export function encodePrototype() {
   console.log(skyIn);
   console.log("TIDAK NULL");
 
+  const resultString = convertObjectToString(skyIn);
+
+  console.log(`[${resultString}]`);
+
   return "Success";
 }
+
+// 00000585BCAP    202411121416501680000000SAC02F452R              BCAPS                        BCAP    20241112141650168000000020241112720000      WEB       172.16.20.11                                WED030120H N1787130271     020241112720000                          A000000      00010                                                                        EN                                                                                                                                             D00000082                     00000100001071000204442      2024010120240919                @@
+// 00000585MAAS    202411121402224390000000SAC02F452R              BCAPS                        MAAS    20241112140222439000000020241112346000      WEB       172.16.20.11                                WED030120H N1787130271     020241112346000                          A000000      00010                                                                        EN                                                                                                                                             D00000082                     00000100001071000204442      2024010120240919                @@
+// 00000585LeRuccoL202411121226010020000000SAC02F452R              MTI S                        LeRuccoL20241112122601002000000020241112122601000138WEB       172.16.20.11                                WED030120H N1787130271     020241112122601000140                    A000000      00010                                                                        EN                                                                                                                                             D00000082                     00000100001071000204442      2024010120240919                @@

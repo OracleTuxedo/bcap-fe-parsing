@@ -4,7 +4,6 @@ export enum Meta {
   FIELD = "field",
   FIELD_NUMBER = "fieldnumber",
   FIELD_LIST = "fieldlist",
-  FIELD_VO = "fieldvo",
 }
 
 export interface FieldMeta {
