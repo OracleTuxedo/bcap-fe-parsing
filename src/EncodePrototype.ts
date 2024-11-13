@@ -18,7 +18,7 @@ export function encodePrototype() {
 
   const skyIn: SkyIn<SAC02F452RInVo> | null = makeSkyIn<SAC02F452RInVo>({
     typeClass: SAC02F452RInVo,
-    inVo: inVo,
+    data: inVo,
     userDataInput: userDataInput,
   });
 

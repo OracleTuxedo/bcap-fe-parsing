@@ -31,11 +31,11 @@ export function makeSkyUserDataInput({
 
 export function makeSkyIn<I>({
   typeClass,
-  inVo,
+  data,
   userDataInput,
 }: {
   typeClass: ClassConstructor<I>;
-  inVo: I;
+  data: I;
   userDataInput: SkyUserDataInput;
 }): SkyIn<I> | null {
   const skyHeader: SkyHeader | null = makeSkyHeader({
@@ -43,7 +43,7 @@ export function makeSkyIn<I>({
   });
   const skyInData: SkyInData<I> | null = makeSkyInData({
     typeClass: typeClass,
-    data: inVo,
+    data: data,
   });
 
   if (!skyHeader || !skyInData) return null;

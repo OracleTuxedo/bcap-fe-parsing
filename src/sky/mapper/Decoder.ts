@@ -16,6 +16,11 @@ export interface DecoderParam<T> {
   fieldLists?: Array<FieldListParam<Object>> | undefined;
 }
 
+/**
+ * Decoder Convert String to Object
+ * @param param DecoderParam
+ * @returns T | Object | null
+ */
 export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
 
