@@ -5,14 +5,6 @@ import { makeSkyIn, makeSkyUserDataInput } from "../sky/util";
 import { SkyIn, SkyOut, SkyUserDataInput } from "../sky/vo";
 import axios from "axios";
 
-/**
- * std_date [20220101]
- * end_date [20241211]
- * apfm_pgrs_stat_cd [70]
- * mid [71000638409]
- * next_key_val
- * page_size [000020]
- */
 /// Request Unit Test
 // [00000813                                SMC03F054R              MTI S                                                                            UNIT      192.168.1.89                    0CDD2494CF5F                           020241113155906176                         00000      00000                                                                        EN                                                                                                                                              00000000                     20220101202412117071000638409                                                                                                                                                                                                                                                                000020]
 // [00000817MTI     202411131608571320000000SMC03F054R              MTI S                        MTI     20241113160857132000000020241113322000      WEB       172.16.20.11                                WMC0302500 N1787130271     020241113322000                          A000000      00010                                                                        EN                                                                                                                                             D00000314                     20220101202412117071000638409                                                                                                                                                                                                                                                                00000020@@]

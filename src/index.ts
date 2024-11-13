@@ -9,12 +9,11 @@
 // import { encodePrototype } from "./EncodePrototype";
 // encodePrototype();
 
-import { callSMC03F054R } from "./testcall/SMC03F054R";
-callSMC03F054R();
+import { callSAC02F452R } from "./testcall/SAC02F452R";
+callSAC02F452R();
 
-// import { callSAC02F452R } from "./testcall/SAC02F452R";
-// callSAC02F452R();
+// import { callSMC03F054R } from "./testcall/SMC03F054R";
+// callSMC03F054R();
 
-// SMC03F054R
-// SMC03F055R
-// WMC0302500
+// import { callSMC03F055R } from "./testcall/SMC03F055R";
+// callSMC03F055R();
