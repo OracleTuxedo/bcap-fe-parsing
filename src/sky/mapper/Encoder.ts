@@ -85,11 +85,13 @@ function parseFieldNumber(
     case "DECIMAL":
     case "DOUBLE":
     case "FLOAT":
+      if (!value) return "".padStart(length, "0");
       return (value * Math.pow(10, decimal)).toString().padStart(length, "0");
 
     case "LONG":
     case "INT":
     case "SHORT":
+      if (!value) return "".padStart(length, "0");
       return value.toString().padStart(length, "0");
 
     default:

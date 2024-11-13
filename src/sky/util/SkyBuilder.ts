@@ -91,14 +91,14 @@ function makeSkyHeader({
   );
   if (!fields) return null;
 
-  header.gid_sysname = "BCAP"; // TODO InetAddress.getLocalHost().getHostName();
+  header.gid_sysname = "MTI"; // TODO InetAddress.getLocalHost().getHostName();
   header.gid_yyyyymmdd = moment().format("YYYYMMDD");
   header.gid_hhmmss = moment().format("HHmmss");
   header.gid_seq = globalSeq();
   header.gid_pid = "00000"; // TODO System.getProperty("wlinstance");
   header.gid_stat = "00";
   header.tx_code = userDataInput.tx_code;
-  header.inst_no = "BCAP";
+  header.inst_no = "MTI";
   header.send_rspn_type = "S";
   header.rspn_svc_code = userDataInput.rspn_svc_code;
   header.ori_global_id = makeOriginalGid(header, fields);
