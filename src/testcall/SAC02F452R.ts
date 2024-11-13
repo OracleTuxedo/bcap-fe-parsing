@@ -34,7 +34,7 @@ export function encodeSAC02F452R(): string | null {
   return resultString;
 }
 
-export function decoderSAC02F452R(
+export function decodeSAC02F452R(
   responseFromTuxedo: string
 ): SkyOut<SAC02F452ROutVo> | null {
   const parsed: SkyOut<SAC02F452ROutVo> | null = convertStringToObject<
@@ -49,8 +49,7 @@ export function decoderSAC02F452R(
 
 export async function callSAC02F452R() {
   console.log("ENCODER START");
-  // const requestToTuxedo: string | null =
-  //   "00000813                                SMC03F054R              MTI S                                                                            UNIT      192.168.1.89                    0CDD2494CF5F                           020241112162112550                         00000      00000                                                                        EN                                                                                                                                              00000000                     20220101202412117071000638409                                                                                                                                                                                                                                                                000020";
+
   const requestToTuxedo: string | null = encodeSAC02F452R();
 
   if (!requestToTuxedo) return;
@@ -84,7 +83,7 @@ export async function callSAC02F452R() {
   console.log("-----------------------------------------------------------");
   console.log("DECODER START");
 
-  const parsed = decoderSAC02F452R(responseFromTuxedo);
+  const parsed = decodeSAC02F452R(responseFromTuxedo);
   console.log(parsed);
   console.log("-----------------------------------------------------------");
   console.log(parsed?.data.data);

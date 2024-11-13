@@ -3,7 +3,7 @@ import { SMC03F054ROutSub1Vo } from "./SMC03F054ROutSub1Vo";
 
 export class SMC03F054ROutVo {
   constructor() {
-    this.sub1_vo = [new SMC03F054ROutSub1Vo()];
+    this.sub1_vos = [new SMC03F054ROutSub1Vo()];
   }
   @Field({ type: "STRING", length: 8, trim: "RTRIM" })
   std_date: string;
@@ -25,5 +25,5 @@ export class SMC03F054ROutVo {
   page_size: number;
 
   @Field({ type: "LIST", length: 0, trim: "NONE" })
-  sub1_vo: Array<SMC03F054ROutSub1Vo>;
+  sub1_vos: Array<SMC03F054ROutSub1Vo>;
 }

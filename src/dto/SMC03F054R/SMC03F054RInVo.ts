@@ -16,7 +16,7 @@ export class SMC03F054RInVo {
   @Field({ type: "STRING", length: 256, trim: "RTRIM" })
   next_key_val: string;
 
-  @Field({ type: "NUMBER", length: 8, trim: "RTRIM" })
+  @Field({ type: "NUMBER", length: 6, trim: "RTRIM" })
   @FieldNumber({ type: "LONG", decimal: 0 })
   page_size: number;
 }
