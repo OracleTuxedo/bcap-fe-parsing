@@ -10,7 +10,7 @@ export function encodeSAZ02F110R(): string | null {
   inVo.page_no = 1;
   inVo.page_size = 20;
   inVo.biz_ctgo_cd = "AZA";
-  inVo.grup_cd_id = "3006";
+  // inVo.grup_cd_id = "3006";
   inVo.data_stat_cd = "U";
   inVo.lang_clcd = "EN";
 
