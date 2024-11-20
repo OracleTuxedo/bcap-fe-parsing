@@ -1,3 +1,4 @@
+import { Field } from "../../sky/decorator";
 import { SAZ02F111UInSub1Vo } from "./SAZ02F111UInSub1Vo";
 import { SAZ02F111UInSub2Vo } from "./SAZ02F111UInSub2Vo";
 import { SAZ02F111UInSub3Vo } from "./SAZ02F111UInSub3Vo";
@@ -10,11 +11,16 @@ export class SAZ02F111UInVo {
     this.sub3_vos = [new SAZ02F111UInSub3Vo()];
     this.sub4_vos = [new SAZ02F111UInSub4Vo()];
   }
+
+  @Field({ type: "LIST", length: 0, trim: "NONE" })
   sub1_vos: Array<SAZ02F111UInSub1Vo>;
 
+  @Field({ type: "LIST", length: 0, trim: "NONE" })
   sub2_vos: Array<SAZ02F111UInSub2Vo>;
 
+  @Field({ type: "LIST", length: 0, trim: "NONE" })
   sub3_vos: Array<SAZ02F111UInSub3Vo>;
 
+  @Field({ type: "LIST", length: 0, trim: "NONE" })
   sub4_vos: Array<SAZ02F111UInSub4Vo>;
 }

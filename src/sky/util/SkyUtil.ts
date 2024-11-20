@@ -33,6 +33,7 @@ export function makeOriginalGid(
 
 export function getPacketSize(obj: Object): number | null {
   let count = 0;
+  // console.log(obj);
 
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
@@ -44,7 +45,7 @@ export function getPacketSize(obj: Object): number | null {
   );
   const fieldLists: Array<FieldListParam<typeof obj>> | undefined =
     Reflect.getMetadata(Meta.FIELD_LIST, obj);
-
+  // console.log(fields);
   if (!fields) return null;
 
   for (let i = 0; i < fields?.length; i++) {
@@ -64,7 +65,10 @@ export function getPacketSize(obj: Object): number | null {
           }
         );
 
-        if (!fieldNumber) return null;
+        if (!fieldNumber) {
+          // console.log("propertyKey :" + propertyKey);
+          return null;
+        }
 
         const { pointLength, signLength } = fieldNumber.metadata;
         count += length;
@@ -83,14 +87,25 @@ export function getPacketSize(obj: Object): number | null {
         } else {
           count += fieldList.metadata.length;
         }
-        const countList = getPacketSize(obj[propertyKey]);
-        if (!countList) return null;
+        let countList = 0;
+        for (let i = 0; i < obj[propertyKey].length; i++) {
+          countList += getPacketSize(obj[propertyKey][i]) ?? 0;
+        }
+
+        if (!countList) {
+          // console.log("propertyKey :" + propertyKey);
+          // console.log(obj[propertyKey]);
+          return null;
+        }
         count += countList;
         break;
 
       case "VO":
         const countVo = getPacketSize(obj[propertyKey]);
-        if (!countVo) return null;
+        if (!countVo) {
+          // console.log("propertyKey :" + propertyKey);
+          return null;
+        }
         count += countVo;
         break;
       default:
