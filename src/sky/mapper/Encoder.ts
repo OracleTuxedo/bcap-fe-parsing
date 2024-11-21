@@ -103,7 +103,7 @@ function parseFieldList(
   obj: Array<Object>,
   fieldList: FieldListParam<Object> | undefined
 ): string | null {
-  if (!obj) return null;
+  if (!obj) return "";
   let resultString = "";
   const length = fieldList?.metadata.length ?? 8;
   resultString += obj.length.toString().padStart(length, "0");

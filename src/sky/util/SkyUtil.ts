@@ -88,6 +88,7 @@ export function getPacketSize(obj: Object): number | null {
           count += fieldList.metadata.length;
         }
         let countList = 0;
+        if (!obj[propertyKey]) break;
         for (let i = 0; i < obj[propertyKey].length; i++) {
           countList += getPacketSize(obj[propertyKey][i]) ?? 0;
         }
