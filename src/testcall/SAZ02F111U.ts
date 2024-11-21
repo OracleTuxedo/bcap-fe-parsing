@@ -16,9 +16,9 @@ export function createSAZ02F111U(): SAZ02F111UInVo {
   const inVo1 = new SAZ02F111UInSub1Vo();
   inVo1.biz_clcd = "I"; // I = Create / Insert
   inVo1.biz_ctgo_cd = "EXT"; // System Division
-  inVo1.grup_cd_id = "0030"; // Group Code
+  inVo1.grup_cd_id = "0032"; // Group Code
   inVo1.data_stat_cd = "U"; // U = Active
-  inVo1.cd_expl = "Group Code EXT 0030"; // Description
+  inVo1.cd_expl = "Group Code EXT 0032"; // Description
 
   /**
    * [CMMN_CD_ID] = [CMMN_CD_NM]
@@ -33,19 +33,19 @@ export function createSAZ02F111U(): SAZ02F111UInVo {
   inVo2En.biz_clcd = "I";
   inVo2En.msg_id = inVo1.biz_ctgo_cd + inVo1.grup_cd_id;
   inVo2En.lang_clcd = "EN";
-  inVo2En.msg_nm = "EN Group Code EXT 0030";
+  inVo2En.msg_nm = "EN Group Code EXT 0032";
   inVo2En.data_stat_cd = "U";
 
   const inVo2Id = new SAZ02F111UInSub2Vo();
   inVo2Id.biz_clcd = "I";
   inVo2Id.msg_id = inVo1.biz_ctgo_cd + inVo1.grup_cd_id;
   inVo2Id.lang_clcd = "ID";
-  inVo2Id.msg_nm = "ID Group Code EXT 0030";
+  inVo2Id.msg_nm = "ID Group Code EXT 0032";
   inVo2Id.data_stat_cd = "U";
 
   const inVo3 = new SAZ02F111UInSub3Vo();
   inVo3.biz_clcd = "I"; // I = Create
-  inVo3.cmmn_cd_id = inVo1.biz_ctgo_cd + inVo1.grup_cd_id;
+  inVo3.cmmn_cd_id = "EXT0032"; //inVo1.biz_ctgo_cd + inVo1.grup_cd_id;
   inVo3.dtl_cd_id = "001"; // Detail Code Id / Increment dg string length 3 padding 0
   inVo3.msg_nm = ""; // Gak butuh di Create hanya di Update
   inVo3.sort_req = 1; // Increment
@@ -53,7 +53,7 @@ export function createSAZ02F111U(): SAZ02F111UInVo {
   inVo3.clss_info_val1 = "";
   inVo3.clss_info_val2 = "";
   inVo3.clss_info_val3 = "";
-  inVo3.cd_expl = "Detail Code EXT 0030"; // Description
+  inVo3.cd_expl = "Detail Code EXT 0032"; // Description
 
   /**
    * [CMMN_CD_ID] Group Code = [CMMN_CD_ID] Detail Code
@@ -64,27 +64,30 @@ export function createSAZ02F111U(): SAZ02F111UInVo {
 
   const inVo4En = new SAZ02F111UInSub4Vo();
   inVo4En.biz_clcd = "I";
-  inVo4En.msg_id = inVo1.biz_ctgo_cd + inVo1.grup_cd_id + inVo3.dtl_cd_id;
+  inVo4En.msg_id = inVo3.cmmn_cd_id + inVo3.dtl_cd_id; //inVo1.biz_ctgo_cd + inVo1.grup_cd_id + inVo3.dtl_cd_id;
   // inVo4En.msg_id = "";
   inVo4En.lang_clcd = "EN";
-  inVo4En.msg_nm = "EN Detail Code EXT 0030 001";
+  inVo4En.msg_nm = "EN Detail Code EXT 0032 001";
   inVo4En.data_stat_cd = "U";
 
   const inVo4Id = new SAZ02F111UInSub4Vo();
   inVo4Id.biz_clcd = "I";
-  inVo4Id.msg_id = inVo1.biz_ctgo_cd + inVo1.grup_cd_id + inVo3.dtl_cd_id;
+  inVo4Id.msg_id = inVo3.cmmn_cd_id + inVo3.dtl_cd_id; //inVo1.biz_ctgo_cd + inVo1.grup_cd_id + inVo3.dtl_cd_id;
   // inVo4Id.msg_id = "";
   inVo4Id.lang_clcd = "ID";
-  inVo4Id.msg_nm = "ID Detail Code EXT 0030 001";
+  inVo4Id.msg_nm = "ID Detail Code EXT 0032 001";
   inVo4Id.data_stat_cd = "U";
 
   const inVo = new SAZ02F111UInVo();
-  inVo.sub1_vos = [inVo1];
-  inVo.sub2_vos = [inVo2En, inVo2Id];
-  inVo.sub3_vos = null;
-  inVo.sub4_vos = null;
-  // inVo.sub3_vos = [inVo3];
-  // inVo.sub4_vos = [inVo4En, inVo4Id];
+  inVo.sub1_vos = null;
+  inVo.sub2_vos = null;
+  // inVo.sub3_vos = null;
+  // inVo.sub4_vos = null;
+
+  // inVo.sub1_vos = [inVo1];
+  // inVo.sub2_vos = [inVo2En, inVo2Id];
+  inVo.sub3_vos = [inVo3];
+  inVo.sub4_vos = [inVo4En, inVo4Id];
 
   return inVo;
 }
