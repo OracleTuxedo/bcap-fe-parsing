@@ -5,7 +5,7 @@ import {
   SAZ02F111UInSub4Vo,
   SAZ02F111UInVo,
   SAZ02F111UOutVo,
-} from "../dto/SAZ02F111U";
+} from "../vo/az/az02/SAZ02F111U";
 import { convertStringToObject } from "../sky/mapper/Decoder";
 import { convertObjectToString } from "../sky/mapper/Encoder";
 import { makeSkyIn, makeSkyUserDataInput } from "../sky/util";

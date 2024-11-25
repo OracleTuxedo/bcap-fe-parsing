@@ -1,4 +1,4 @@
-import { SMC03F055RInVo, SMC03F055ROutVo } from "../dto/SMC03F055R";
+import { SMC03F055RInVo, SMC03F055ROutVo } from "../vo/mc/mc03/SMC03F055R";
 import { convertStringToObject } from "../sky/mapper/Decoder";
 import { convertObjectToString } from "../sky/mapper/Encoder";
 import { makeSkyIn, makeSkyUserDataInput } from "../sky/util";

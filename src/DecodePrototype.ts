@@ -1,8 +1,7 @@
 import { convertStringToObject } from "./sky/mapper/Decoder";
 import { SkyOut } from "./sky/vo";
-
-import { SAC02F452ROutVo } from "./dto/SAC02F452R/";
-import { SED03F107ROutVo } from "./dto/SED03F107R";
+import { SAC02F452ROutVo } from "./vo/ac/ac02/SAC02F452R";
+import { SED03F107ROutVo } from "./vo/ed/ed03/SED03F107R";
 
 export function decodePrototype() {
   const input1 =

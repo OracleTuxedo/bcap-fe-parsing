@@ -1,7 +1,7 @@
-import { SAC02F452RInVo } from "./dto/SAC02F452R";
 import { convertObjectToString } from "./sky/mapper/Encoder";
 import { makeSkyIn, makeSkyUserDataInput } from "./sky/util";
 import { SkyIn, SkyUserDataInput } from "./sky/vo";
+import { SAC02F452RInVo } from "./vo/ac/ac02/SAC02F452R";
 
 export function encodePrototype() {
   const inVo: SAC02F452RInVo = new SAC02F452RInVo();

@@ -1,4 +1,4 @@
-import { SAC02F452RInVo, SAC02F452ROutVo } from "../dto/SAC02F452R";
+import { SAC02F452RInVo, SAC02F452ROutVo } from "../vo//ac/ac02/SAC02F452R";
 import { convertStringToObject } from "../sky/mapper/Decoder";
 import { convertObjectToString } from "../sky/mapper/Encoder";
 import { makeSkyUserDataInput, makeSkyIn } from "../sky/util";

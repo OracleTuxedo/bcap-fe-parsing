@@ -1,4 +1,4 @@
-import { SAZ02F113RInVo, SAZ02F113ROutVo } from "../dto/SAZ02F113R";
+import { SAZ02F113RInVo, SAZ02F113ROutVo } from "../vo/az/az02/SAZ02F113R";
 import { convertStringToObject } from "../sky/mapper/Decoder";
 import { convertObjectToString } from "../sky/mapper/Encoder";
 import { makeSkyIn, makeSkyUserDataInput } from "../sky/util";
