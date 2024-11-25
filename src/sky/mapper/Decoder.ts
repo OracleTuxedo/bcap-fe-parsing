@@ -25,16 +25,18 @@ export function convertStringToObject<T>(param: DecoderParam<T>): T | null {
   const { input, classInstance } = param;
 
   /// Blueprint object that we want to create and casting to Object
-  const obj = classInstance as Object;
+  const obj = classInstance as Record<string, any>;
 
   /// Defining obj metadata
   /// Metadata gives us structured blueprint of that object
   const fields: Array<FieldParam> | undefined =
-    param.fields ?? Reflect.getMetadata(Meta.FIELD, obj);
+    param.fields ?? Reflect.getMetadata(Meta.FIELD, classInstance as Object);
   const fieldNumbers: Array<FieldNumberParam> | undefined =
-    param.fieldNumbers ?? Reflect.getMetadata(Meta.FIELD_NUMBER, obj);
+    param.fieldNumbers ??
+    Reflect.getMetadata(Meta.FIELD_NUMBER, classInstance as Object);
   const fieldLists: Array<FieldListParam<typeof obj>> | undefined =
-    param.fieldLists ?? Reflect.getMetadata(Meta.FIELD_LIST, obj);
+    param.fieldLists ??
+    Reflect.getMetadata(Meta.FIELD_LIST, classInstance as Object);
 
   /// Temporary string that preserves only after substring of index length
   let tempSubset: string = "";

@@ -6,17 +6,19 @@ import {
   FieldListParam,
 } from "../decorator";
 
-export function convertObjectToString(obj: Object): string | null {
+export function convertObjectToString(classInstance: Object): string | null {
+  const obj = classInstance as Record<string, any>;
+
   const fields: Array<FieldParam> | undefined = Reflect.getMetadata(
     Meta.FIELD,
-    obj
+    classInstance
   );
   const fieldNumbers: Array<FieldNumberParam> | undefined = Reflect.getMetadata(
     Meta.FIELD_NUMBER,
-    obj
+    classInstance
   );
-  const fieldLists: Array<FieldListParam<typeof obj>> | undefined =
-    Reflect.getMetadata(Meta.FIELD_LIST, obj);
+  const fieldLists: Array<FieldListParam<typeof classInstance>> | undefined =
+    Reflect.getMetadata(Meta.FIELD_LIST, classInstance);
 
   if (!fields) return null;
 

@@ -3,8 +3,8 @@
 // import { prototype } from "./prototype";
 // prototype();
 
-// import { decodePrototype } from "./DecodePrototype";
-// decodePrototype()
+import { decodePrototype } from "./DecodePrototype";
+decodePrototype();
 
 // import { encodePrototype } from "./EncodePrototype";
 // encodePrototype();
@@ -30,5 +30,5 @@
 // import { callSAZ02F116R } from "./testcall/SAZ02F116R";
 // callSAZ02F116R();
 
-import { callSAZ02F111U } from "./testcall/SAZ02F111U";
-callSAZ02F111U();
+// import { callSAZ02F111U } from "./testcall/SAZ02F111U";
+// callSAZ02F111U();

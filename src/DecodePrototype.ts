@@ -16,7 +16,11 @@ export function decodePrototype() {
     classInstance: new SkyOut(SED03F107ROutVo),
   });
 
-  console.log("RESULT");
+  console.log(
+    "------------------------------------------------------------------------------------" +
+      "RESULT" +
+      "------------------------------------------------------------------------------------"
+  );
   console.log(parsed1);
 
   const input2 =
